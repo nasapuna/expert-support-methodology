@@ -5,7 +5,9 @@
 **Слой:** `work/05_drafts`
 **Источник P2W:** `work/01_problem-cards/PC-ES-002-managed-design-decision-formation.md`
 **Контекст:** экспертное сопровождение проектирования объектов капитального строительства
-**FPF-опора:** `A.3.2 U.MethodDescription`, `A.15 Role-Method-Work Alignment`, `E.10.D2`, `A.7 Strict Distinction`, `C.2.1 U.Episteme`, `A.10 Evidence Graph Referring`, `E.18.1 Principles-to-Work Transduction Path`
+**FPF-опора:** `A.3.2 U.MethodDescription`, `A.15 Role-Method-Work Alignment`, `E.10.D2`, `A.7 Strict Distinction`, `C.2.1 U.Episteme`, `A.10 Evidence Graph Referring`, `E.18.1 Principles-to-Work Transduction Path`; текущее P2W-дополнение: `C.30`, `C.30.P`, `E.18`, `A.3.4`, `A.15.2`, `C.16`, `C.25`, `E.23`, `route:boundary-unpacking`, `A.6`, `C.16.Q`
+**Связанный P2W-record:** `work/05_drafts/p2w/WR-ES-001_oks-system-frame.p2w.md`
+**Рабочее ограничение:** `work/06_decisions/DEC-ES-001_oks-system-frame-before-regulation.md`
 
 ---
 
@@ -31,6 +33,8 @@
 - обязательным составом проектной документации;
 - инструкцией SIGNAL DOCS;
 - доказательством повышения качества проектных решений.
+
+Текущее P2W-дополнение фиксирует не новую регламентированную процедуру, а набор рабочих записей, которые должны удерживать `object-of-attention.md`: ОКС как целевую проектируемую систему и состояние проектных решений об ОКС как непосредственный объект управления. Центральная запись дополнения находится в `WR-ES-001` и уточняет `WrittenRecordOrApplication` так, чтобы системная рамка, transformation-flow, точки экспертного вмешательства и характеристики качества не подменялись ПД, ИК, файлами, статусами или замечаниями.
 
 ---
 
