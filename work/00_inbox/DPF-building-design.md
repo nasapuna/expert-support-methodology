@@ -2,10 +2,10 @@
 
 > Доменный слой над FPF для управления разработкой проектных решений ОКС: от исходных данных и сценариев использования к концепциям, архитектурным вопросам, проектным решениям, доказательствам и проектной документации.
 
-- **Статус:** draft v0.2
-- **Дата:** 2026-07-01
+- **Статус:** draft v0.3
+- **Дата:** 2026-07-02
 - **Контекст применения:** экспертное сопровождение проектирования зданий и сооружений
-- **FPF-основание:** FPF Core Conceptual Specification, версия June 2026; локальная сверка ID по `work/00_inbox/FPF-Spec.md`
+- **FPF-основание:** FPF Core Conceptual Specification, версия June 2026; ID сверены через FPF MCP и `work/00_inbox/DPF-building-design-improvement-proposals-FPF-checked.md`
 - **Основной рабочий вопрос:** как сделать ход разработки проектного решения явным, проверяемым и улучшаемым, а не сводить проектирование к выпуску разделов ПД.
 
 ---
@@ -62,6 +62,32 @@ source signals / исходные данные
 ```
 
 Минимальное правило P2S: исходные данные не выбирают проектное решение. Они создают структурирующую потребность, ограничения, условия возврата к источнику и требования к синтезу кандидатных структур.
+
+## 0.1. Граница DPF-пакета и stewarding
+
+`DPF-building-design.md` является publication carrier-ом текущей DPF-редакции, а не всей архитектурой DPF-пакета, не source pack, не quality result и не work authority.
+
+FPF-owner: `E.4.DPF`, `E.4.DPF.DA`.
+
+```text
+DPFPackageStewardshipRecord:
+  frameworkEditionRef:
+  declaredDomainOrLocalContext:
+  intendedReaderOrOperator:
+  declaredUse:
+  nonUseBoundary:
+  fpfCoreEditionRef:
+  sourceBasisRefs:
+  pfadDecisionRefs:
+  patternSetRefs:
+  relationRecordRefs:
+  publicationCarrierRefs:
+  accessCarrierRefs:
+  qualityEvaluationRefs:
+  refreshRefs:
+  currentnessOrEditionBoundary:
+  blockedOverread:
+```
 
 ---
 
@@ -175,10 +201,11 @@ source signal
 | DPF.6C | Comparison / selected set | Нужно сравнить варианты и опубликовать retained/selected set | `ComparisonBasis`, `SelectedSetPublication` | A.19.CPM, A.19.SelectorMechanism, G.5 |
 | DPF.7 | Проектное архитектурное решение | Нужно зафиксировать commitment по выбранным структурам | `ArchitectureDecisionRelation@Project` | C.32.PAD, C.11, A.10 |
 | DPF.7A | ADR / record-проекция решения | Нужно сделать решение читаемым carrier без подмены PAD | `ArchitectureDecisionRecordProjection` | C.32.ADR, E.17, E.9 |
+| DPF.7B | Пакет чтения решения | Нужно компактно собрать PAD, ADR, evidence, projection и роли без создания нового root-решения | `MinimalDecisionUsePackage` | C.32.PAD, C.32.ADR, E.17, A.10 |
 | DPF.8 | Доказательство / обоснование решения | Нужно отделить решение от claim-specific evidence и eval | `DesignEvidenceTrace` | A.10, B.3, C.16, C.32.ACE |
 | DPF.9 | Готовность проектного шага | Нужно понять, можно ли переходить дальше | `DesignReadinessGate` | A.15.5, A.21 |
-| DPF.10 | Проекция решения в ПД / BIM / views | Нужно связать selected structures с carriers и descriptions | `BuiltAssetArchitectureDescriptionUseCard`, `ProjectDocumentationProjection` | C.30.AD.BA, E.17, C.33 |
-| DPF.11 | Обратная связь к методу и архитектуре | Замечания или проектные несоответствия требуют repair/source return | `DesignMethodFeedbackRecord` | C.32.FAIL, E.23, G.11, A.15 |
+| DPF.10 | Проекция решения в ПД / BIM / views | Нужно связать selected structures с carriers и descriptions | `BuiltAssetArchitectureDescriptionUseCard`, `ProjectDocumentationProjection`, `MachineReadableValidationProjection` | C.30.AD.BA, E.17, C.33 |
+| DPF.11 | Обратная связь к методу и архитектуре | Замечания, source changes или проектные несоответствия требуют repair/source return | `DesignMethodFeedbackRecord`, `DesignChangeImpactTrace` | C.32.FAIL, E.23, G.11, A.15, C.32.P2S |
 
 ---
 
@@ -250,6 +277,16 @@ DesignDevelopmentMethodDescription:
     - BuiltAssetArchitectureDescriptionUseCard
     - ProjectDocumentationProjection
   roles:
+  roleAssignmentPolicy:
+    authoringRoleAssignmentRefs:
+    reviewRoleAssignmentRefs:
+    approvalRoleAssignmentRefs:
+    publicationRoleAssignmentRefs:
+    coordinationRoleAssignmentRefs:
+    separationOfDutiesRefs:
+    assignmentWindowPolicy:
+    roleEvidenceOrSourceRefs:
+    nonAdmissibleUse:
   workSteps:
   readinessChecks:
   evidenceRequirements:
@@ -291,6 +328,8 @@ DesignDevelopmentMethodDescription:
 - где selected structures отражены в ПД/BIM/views;
 - как эксперт его проверяет.
 
+Role name, должность, подпись, статус согласования или publication carrier не доказывают, что решение сформировано, проверено или принято. Для reliance-bearing claim нужен `RoleAssignment` с holder, role, bounded context и window либо явное lower/block состояние.
+
 ---
 
 # DPF.3 — Исходные данные как source signals
@@ -324,6 +363,11 @@ DesignSourceSignalUseRecord:
   freshnessBoundary:
   missingOrAmbiguousData:
   sourceReturnCondition:
+  affectedDecisionRefs:
+  affectedSelectedStructureRefs:
+  affectedEvidenceTraceRefs:
+  affectedDocumentationProjectionRefs:
+  changeImpactRule:
   receivingPatternRef:
 ```
 
@@ -761,6 +805,34 @@ ArchitectureDecisionRelation@Project:
     requirementRefs:
   evidenceRefs:
   methodUseInstructions:
+  decisionAuthorRoleAssignmentRef:
+  decisionReviewerRoleAssignmentRefs:
+  decisionApproverRoleAssignmentRef:
+  publisherRoleAssignmentRef:
+  coordinationRoleAssignmentRefs:
+  roleSeparationNotes:
+  stakeholderConcernCoverage:
+    - concernRef:
+      stakeholderRoleOrGroupRef:
+      viewpointRef:
+      affectedStructureRefs:
+      coveredByEvidenceOrAssuranceRefs:
+      acceptedLossOrResidualRiskRef:
+      unresolvedConcernOrSourceReturnCondition:
+  protectionRiskAndComplianceRows:
+    - concernRef:
+      protectionNeedRef:
+      riskAssumptionRef:
+      regulatoryAssumptionRef:
+      complianceRuleRef:
+      affectedStructureRefs:
+      evidenceOrAssuranceRefs:
+      gateOrReviewRefs:
+      accessOrConfidentialityBoundary:
+      acceptedRiskOrLoss:
+      unresolvedGap:
+      receivingOwnerForNextClaim:
+      nonAdmissibleUse:
   affectedDocumentationRefs:
   residualRisksOrOpenIssues:
   decisionStatus:
@@ -779,8 +851,14 @@ ArchitectureDecisionRelation@Project:
 - на какие source signals, концепции, candidate palette и comparison basis решение опирается;
 - какие доказательства подтверждают допустимость;
 - где решение отражено в ПД;
+- какие concern/viewpoint покрыты, какие потери или residual risks приняты;
+- кто сформировал, проверил, принял и опубликовал решение как `RoleAssignment`;
 - какие method/work consequences появляются;
 - при каком изменении решение надо пересмотреть, заменить или вернуть к источнику.
+
+Concern/viewpoint не выбирает решение и не доказывает его допустимость. Он задаёт рамку чтения, проверки и source-return, в которой selected structures, evidence и projection должны быть представлены без потерь, существенных для этого concern.
+
+Protection/security/compliance row фиксирует concern, assumption, affected structures и next owner. Она не доказывает безопасность, соответствие нормам, правомерность публикации или готовность к экспертизе без соответствующего evidence/assurance/gate owner.
 
 ---
 
@@ -816,6 +894,36 @@ ADR, карточка решения, журнал или фрагмент ПД 
 
 ---
 
+# DPF.7B — Minimal decision use package / пакет чтения решения
+
+## Problem frame
+
+Используйте этот паттерн, когда участнику проекта, экспертизы или downstream work нужен компактный пакет чтения уже принятого PAD без подмены PAD, evidence, gate или ПД.
+
+## Рабочий продукт
+
+```text
+MinimalDecisionUsePackage:
+  packageId:
+  architectureDecisionRelationRef:
+  architectureDecisionRecordProjectionRef:
+  evidenceTraceRefs:
+  documentationProjectionRefs:
+  roleAssignmentRefs:
+  readinessGateRefs:
+  riskOrComplianceNoteRefs:
+  publicationCarrierRefs:
+  readerUse:
+  admissibleUse:
+  nonAdmissibleUse:
+```
+
+## Минимальное правило
+
+`MinimalDecisionUsePackage` является navigation / publication package. Он не принимает решение, не доказывает claim, не проводит gate и не заменяет projection в ПД/BIM/views.
+
+---
+
 # DPF.8 — Доказательство / обоснование решения
 
 ## Problem frame
@@ -830,11 +938,19 @@ DesignEvidenceTrace:
   claimText:
   claimScope:
   evidenceRefs:
+  evidenceGraphPathRefs:
+  evidenceCarrierRefs:
+  evidenceProducingWorkRefs:
+  evidenceInterpretingRoleAssignmentRefs:
+  methodTraceRefs:
   measurementRefs:
   evalResultRefs:
   evidenceKind:
-    calculation | model | normativeCheck | simulation | comparison | expertJudgement | sourceDocument | fieldData | other
+    calculation | model | normativeCheck | simulation | comparison | expertJudgement | sourceDocument | fieldData | issueRecord | reviewSessionResult | acceptedDeviation | other
   evidenceFreshness:
+  timeOrFreshnessWindow:
+  sourceCurrentnessRefs:
+  rivalExplanationOrLimitation:
   reliabilityNotes:
   unresolvedEvidenceGap:
   admissibleUse:
@@ -844,6 +960,8 @@ DesignEvidenceTrace:
 ## Минимальное правило
 
 Доказательство должно поддерживать конкретный claim, а не “решение вообще”.
+
+Evidence graph path поддерживает только указанный claim в указанном scope. Он не является approval, gate passage, PAD, selected set или publication readiness.
 
 Если расчёт, модель, simulation, BIM-clash, экспертная оценка или табличный score используются для сравнения вариантов, они остаются evidence/eval input. Они не становятся comparison, selected set или PAD без соответствующих DPF.6C/DPF.7 записей.
 
@@ -875,10 +993,13 @@ NonAdmissibleUse: не подтверждает технологичность, 
 ```text
 DesignReadinessGate:
   gateId:
+  gateProfile:
+    domainDecisionReadiness | publicationReadiness | workEntryReadiness | reviewReadiness
   designStep:
   objectScope:
   requiredRecords:
   requiredEvidence:
+  requiredProjectionRefs:
   blockingGaps:
   acceptedDeviations:
   gateDecision:
@@ -886,6 +1007,7 @@ DesignReadinessGate:
   decisionBasis:
   nextAllowedWork:
   nonAllowedWork:
+  nonAdmissibleUse:
 ```
 
 ## Пример gate для перехода от концепции к проектному решению
@@ -899,6 +1021,10 @@ DesignReadinessGate:
 | Доказательства | Для выбранного решения указано, чем оно будет проверяться. |
 
 Gate не выбирает проектное решение и не доказывает его допустимость. Он проверяет, собран ли достаточный проектный комплект для следующего шага работы или рассмотрения.
+
+`domainDecisionReadiness` проходит, если source signals, use concept, system concept, architecture question, candidate basis, comparison и evidence plan достаточно предъявлены для PAD/review.
+
+`publicationReadiness` проходит, если PAD уже принят; ADR/projection связаны с PAD; selected/expected structures представлены в carriers; representation loss и source-return condition указаны; publication carrier не подменяет proof, gate или decision.
 
 ---
 
@@ -940,8 +1066,29 @@ ProjectDocumentationProjection:
   scheduleOrSpecificationRefs:
   crossReferences:
   representationLossNotes:
+  viewpointRefs:
+  concernCoverageNotes:
+  unrepresentedConcernRefs:
   reviewerUse:
+  reviewerViewpointUse:
+  sourceReturnConditionForConcernLoss:
   nonAdmissibleUse:
+
+MachineReadableValidationProjection:
+  validationProjectionId:
+  governingClaimRef:
+  checkedCarrierRefs:
+  machineReadableRuleSpecRefs:
+  ruleSpecOwnerRef:
+  checkRunWorkRefs:
+  checkResultRefs:
+  checkedStructureRefs:
+  capturedStructureNotes:
+  lostOrUnvalidatedStructureNotes:
+  evidenceOrGateUse:
+  admissibleUse:
+  nonAdmissibleUse:
+  sourceReturnCondition:
 ```
 
 ## Минимальное правило
@@ -957,6 +1104,8 @@ ProjectDocumentationProjection:
 - выбранные альтернативы, retained alternatives или причины отсутствия альтернатив;
 - доказательства;
 - связанные решения в других разделах.
+
+Machine-readable check может подтвердить, что carrier соответствует объявленным rule specs в указанном scope. Он не становится PAD, evidence sufficiency, gate passage, regulatory compliance или proof без прямого владельца claim.
 
 ---
 
@@ -997,11 +1146,34 @@ DesignMethodFeedbackRecord:
   decision:
     acceptChange | rejectChange | probeMore | hold
   reopenCondition:
+
+DesignChangeImpactTrace:
+  impactTraceId:
+  changedSourceSignalRef:
+  changedCondition:
+  changedCarrierOrVersionRef:
+  suspectDecisionRefs:
+  suspectSelectedStructureRefs:
+  suspectExpectedStructureRefs:
+  suspectEvidenceTraceRefs:
+  suspectDocumentationProjectionRefs:
+  impactDisposition:
+    noImpact | reviewNeeded | sourceReturn | padRepair | evidenceRefresh | publicationRepair | methodRepair | hold
+  ownerSpecificReturnOrRepair:
+    sourceReturnRef:
+    c32PadRepairOrSupersessionRef:
+    a10EvidenceRefreshRef:
+    c30DescriptionSourceReturnRef:
+    e23MethodImprovementCycleRef:
+    g11CurrentnessRefreshRef:
+  nonAdmissibleUse:
 ```
 
 ## Граница контекста
 
 DPF.11 в этой версии ограничен проектированием. Он не ведёт самостоятельный контур после проектирования. Внешние данные жизненного цикла, если они когда-нибудь понадобятся, должны входить как отдельный source-return к проектному методу, а не расширять текущий DPF за пределы проектирования.
+
+Impact trace не доказывает, что решение неверно. Он фиксирует suspectness и следующий owner-specific route для проверки, ремонта, source return или подтверждения `noImpact`.
 
 ## Пример
 
@@ -1032,6 +1204,7 @@ pack/dpf/
     DPF.6C-comparison-and-selected-set.md
     DPF.7-project-architecture-decision.md
     DPF.7A-architecture-decision-record-projection.md
+    DPF.7B-minimal-decision-use-package.md
     DPF.8-design-evidence-trace.md
     DPF.9-design-readiness-gate.md
     DPF.10-project-documentation-and-bim-projection.md
@@ -1070,8 +1243,28 @@ EntityOfConcern:
   → candidate configurations → comparison → PAD → ПД/BIM projection.
 ```
 
+Стартовое условие пилота: выбрать один конкретный decision scenario или спор, а не абстрактную полноту документации.
+
+```text
+CurrentStateMap:
+  currentDecisionOrIssueRef:
+  describedHolonRef:
+  currentCarrierRefs:
+  currentSourceRefs:
+  currentRoleAssignmentRefs:
+  currentEvidenceRefs:
+  currentToolOrRepositoryRefs:
+  currentDefectPatternRefs:
+  currentRepresentationLossNotes:
+  firstP2SQuestion:
+  nonUseBoundary:
+```
+
+`CurrentStateMap` не является PAD, evidence, gate или work plan. Он фиксирует, из какого текущего carrier/source/role/evidence состояния начинается P2S-восстановление.
+
 Порядок:
 
+0. Создать `CurrentStateMap` для одного текущего decision scenario.
 1. Создать `BuiltAssetSystemCard` для одного объекта.
 2. Создать `DesignSourceSignalUseRecord` для 5-10 ключевых source signals из текущих ИК G0/G1.
 3. Создать `BuiltAssetProblemToStructureFlowCard` и назвать `architectureStructuringNeed`.
@@ -1082,9 +1275,48 @@ EntityOfConcern:
 8. Создать `ComparisonBasis` и selected/retained set.
 9. Создать `ArchitectureDecisionRelation@Project`.
 10. Создать `ArchitectureDecisionRecordProjection` как readable carrier решения.
-11. Связать selected structures с ПД/BIM/views через `BuiltAssetArchitectureDescriptionUseCard` и `ProjectDocumentationProjection`.
-12. Проверить `DesignReadinessGate`.
-13. По итогам экспертного рассмотрения или проектных проверок создать `DesignMethodFeedbackRecord`.
+11. Создать `MinimalDecisionUsePackage`, если нужен компактный пакет чтения уже принятого PAD.
+12. Связать selected structures с ПД/BIM/views через `BuiltAssetArchitectureDescriptionUseCard` и `ProjectDocumentationProjection`.
+13. Проверить `DesignReadinessGate` с явным `gateProfile`.
+14. По итогам экспертного рассмотрения, source change или проектных проверок создать `DesignMethodFeedbackRecord` / `DesignChangeImpactTrace`.
+
+```text
+DPFPilotQualityFrame:
+  objectUnderImprovementRef:
+    DesignDevelopmentMethodDescription | DPFPatternSlice | PilotDecisionScenario | ProjectDocumentationProjectionPractice
+  declaredUse:
+  evaluationPurpose:
+    floorEvaluation | pilotCalibration | adoptionTelemetry | methodRepair | publicationProjectionRepair
+  metricRows:
+    - metricId: chainCompleteness
+      measuredQuestion: восстановлена ли цепочка source → use concept → system concept → decision → evidence → publication
+      evidenceRefs:
+      nonAdmissibleUse:
+    - metricId: evidenceNotCarrierStatus
+      measuredQuestion: evidence поддерживает claim, а не carrier/status
+      evidenceRefs:
+      nonAdmissibleUse:
+    - metricId: roleAssignmentCompleteness
+      measuredQuestion: author/reviewer/approver заданы как RoleAssignment refs
+      evidenceRefs:
+      nonAdmissibleUse:
+    - metricId: sourceChangeImpactLatency
+      measuredQuestion: как быстро найден suspect decision/projection после source change
+      evidenceRefs:
+      nonAdmissibleUse:
+    - metricId: publicationLinkedToDecision
+      measuredQuestion: publication carrier связан с architectureDecisionRef
+      evidenceRefs:
+      nonAdmissibleUse:
+  localTargetValues:
+  failureReasonDistribution:
+  feedbackRoute:
+    designMethodFeedbackRef:
+    e23ImprovementCycleRef:
+    g11RefreshRef:
+```
+
+Метрики DPF-пилота измеряют качество метода сопровождения и полноту предъявления хода. Они не доказывают качество ОКС, не подтверждают PAD, не проводят экспертизу и не заменяют evidence по конкретным claims.
 
 ---
 
@@ -1102,10 +1334,12 @@ EntityOfConcern:
 - [ ] Архитектурные вопросы выделены до детализации решений.
 - [ ] Candidate configurations, criteria/eval и comparison basis отделены от PAD.
 - [ ] Выбранное решение оформлено как PAD с selected structures, accepted losses и reopen/source-return conditions.
+- [ ] Author/reviewer/approver/publisher заданы через `RoleAssignment` refs или явно указан lower/block.
+- [ ] Concerns/viewpoints, accepted losses, residual risks и unresolved source-return conditions отделены от доказательств.
 - [ ] ADR/card/ПД/BIM являются projection/publication carriers, а не самим решением.
 - [ ] Есть доказательства / обоснования по конкретным claim.
 - [ ] Видно, где selected structures отражены в ПД/BIM/views.
-- [ ] Gate/readiness не подменяет decision или proof.
+- [ ] Gate/readiness имеет явный profile и не подменяет decision или proof.
 - [ ] Замечания экспертизы и проектные несоответствия могут быть возвращены не только в правку файла, но и в улучшение метода проектирования.
 
 ## 8.1. P2S-checklist для проектного решения
@@ -1124,6 +1358,7 @@ EntityOfConcern:
 | `DPF-P2S-10` | Work plan, readiness и performed work не подменены проектным решением. |
 | `DPF-P2S-11` | Feedback route ограничен проектированием: expert/design review, междисциплинарная проверка, ПД/BIM consistency, source return, method repair. |
 | `DPF-P2S-12` | Если используется score, расчёт, simulation или экспертное предпочтение, оно не становится решением без comparison/selection/PAD owner. |
+| `DPF-P2S-13` | Source change создаёт suspectness/impact trace, а не автоматический вывод, что PAD неверен или подтверждён. |
 
 ---
 
@@ -1163,6 +1398,42 @@ EntityOfConcern:
 | Проекция в ПД / BIM / views | Представление selected structures в разделах, чертежах, моделях, записках, расчётах и спецификациях. |
 | Экспертное замечание | Зафиксированный дефект или вопрос рассмотрения, который может указывать на проблему решения или метода разработки. |
 
+## 10.1. DPF reference and local semantics discipline
+
+FPF-owner: `E.10`, `A.6.5`, `E.4.DPF.DA`.
+
+```text
+DPFReferenceDiscipline:
+  stableIdsRequiredFor:
+    - sourceSignalRef
+    - useConceptRef
+    - systemConceptRef
+    - architectureQuestionRef
+    - candidateConfigurationRef
+    - criteriaSetRef
+    - comparisonBasisRef
+    - selectedSetRef
+    - architectureDecisionRef
+    - architectureDecisionRecordProjectionRef
+    - evidenceTraceRef
+    - documentationProjectionRef
+    - readinessGateRef
+    - feedbackRecordRef
+  idDoesNotMean:
+    - approval
+    - evidence
+    - currentness
+    - source authority
+    - gate passage
+    - decision truth
+  versionOrEditionBoundary:
+  localTermOwner:
+  admissibleUse:
+  nonAdmissibleUse:
+```
+
+ID / Ref нужен для трассировки и currentness-control. ID не доказывает существование, качество, актуальность, согласование, доказанность или допустимость проектного решения.
+
 ---
 
 ## 11. Минимальная P2W-запись для запуска DPF
@@ -1181,10 +1452,14 @@ NextFPFUseQuestion:
 
 RecoveredFPFKindOrRelation:
   U.MethodDescription для способа разработки проектного решения.
+  A.2.1 для RoleAssignment в author/reviewer/approver/publisher ролях.
   C.32.P2S для problem-to-structure architecturing flow.
   C.30 / C.30.ASV для selected structures и structural views.
   C.32.PAD / C.32.ADR для проектного архитектурного решения и его projection.
   C.30.AD.BA / E.17 для ПД/BIM/views как descriptions/publications.
+  A.10 для claim-specific evidence graph path.
+  A.21 для gate profile и readiness decision.
+  E.22 / E.23 / G.11 для pilot-quality feedback, improvement loop и currentness refresh.
 
 SelectedDPFApplication:
   DPF.2 DesignDevelopmentMethodDescription
@@ -1198,6 +1473,7 @@ SelectedDPFApplication:
   DPF.6C ComparisonBasis
   DPF.7 ArchitectureDecisionRelation@Project
   DPF.7A ArchitectureDecisionRecordProjection
+  DPF.7B MinimalDecisionUsePackage
 
 FirstPilot:
   Pilot-P2S-G0G1-APL-001.
